@@ -21,6 +21,12 @@ pipeline {
                     try {
                         // Deploy the stack
                         sh '''
+                            # Remove the existing stack
+                            docker stack rm aaikyam_monitoring_service
+                            
+                            # Wait for the stack to be removed
+                            echo "Waiting for the stack to be removed..."
+                            sleep 10
                             docker stack deploy -c ${DOCKER_COMPOSE_FILE} aaikyam_monitoring_service --with-registry-auth
                             
                             # Wait for deployment to stabilize
