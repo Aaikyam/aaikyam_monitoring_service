@@ -92,6 +92,4 @@ scrape_configs:
     static_configs:
       - targets: ['aikyam-frontend-beta_aaikyam-frontend-beta:3005']
 
-  - job_name: 'nginx'
-    static_configs:
-      - targets: ['nginx_server_nginx:80']
+
