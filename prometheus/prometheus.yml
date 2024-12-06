@@ -5,5 +5,4 @@ scrape_configs:
   - job_name: 'docker'
     static_configs:
       - targets:
-          - "service1:8080" # Replace with service endpoint
-          - "service2:9090" # Replace with service endpoint
+          - "nginx_server_nginx:80" # Replace with service endpoint
