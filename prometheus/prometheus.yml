@@ -2,56 +2,100 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
-# Alerting rules (optional, but recommended)
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          # Uncomment and configure if using Alertmanager
-          # - alertmanager:9093
-
-# Scrape configurations
 scrape_configs:
-  # Prometheus itself
+  # Monitor Prometheus itself
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['aaikyam_monitoring_service_prometheus:9090']
 
-  # Docker Swarm services monitoring
-  - job_name: 'docker-services'
-    dockerswarm_sd_configs:
-      - host: unix:///var/run/docker.sock
-        role: service
-
-  # Node exporter (for host machine metrics)
+  # Monitor Node Exporter (host machine metrics)
   - job_name: 'node_exporter'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['aaikyam_node_exporter:9100']
 
-  # Specific service monitoring configurations
-  - job_name: 'frontend-dev'
+  # Monitor Docker Swarm services
+  - job_name: 'docker_services'
+    dockerswarm_sd_configs:
+      - host: unix:///var/run/docker.sock
+        role: services
+
+  # Services monitoring
+  - job_name: 'aaikyam-frontend-dev'
     static_configs:
-      - targets: ['localhost:3003']
+      - targets: ['aaikyam-frontend-dev:3003']
 
   - job_name: 'admin-portal'
     static_configs:
-      - targets: ['localhost:3001']
+      - targets: ['aaikyam_admin_admin-portal:3001']
+
+  - job_name: 'recommendation-scheduler'
+    static_configs:
+      - targets: ['aaikyam_ai_scheduler_recommendation_scheduler:<REPLACE_WITH_PORT>']
 
   - job_name: 'elasticsearch'
     static_configs:
-      - targets: ['localhost:9200']
+      - targets: ['aaikyam_elk_elasticsearch:9200']
 
   - job_name: 'kibana'
     static_configs:
-      - targets: ['localhost:5601']
+      - targets: ['aaikyam_elk_kibana:5601']
+
+  - job_name: 'logstash'
+    static_configs:
+      - targets: ['aaikyam_elk_logstash:5044', 'aaikyam_elk_logstash:9600']
+
+  - job_name: 'labs-portal'
+    static_configs:
+      - targets: ['aaikyam_labs_labs-portal:3002']
+
+  - job_name: 'links-service'
+    static_configs:
+      - targets: ['aaikyam_links_links:5000']
+
+  - job_name: 'mailer-service'
+    static_configs:
+      - targets: ['aaikyam_mailer_mailer-service:4001']
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['aaikyam_monitoring_service_grafana:3000']
+
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['aaikyam_queue_kafka:9092']
+
+  - job_name: 'kafka-ui'
+    static_configs:
+      - targets: ['aaikyam_queue_kafka-ui:8001']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['aaikyam_queue_redis:6379']
+
+  - job_name: 'zookeeper'
+    static_configs:
+      - targets: ['aaikyam_queue_zookeeper:2181']
+
+  - job_name: 'blog-recommender'
+    static_configs:
+      - targets: ['aaikyam_recommender_blog_recommender:8000']
 
   - job_name: 'backend-prod'
     static_configs:
-      - targets: ['localhost:4000']
+      - targets: ['aaikyam_server_aaikyam-server-prod:4000']
 
   - job_name: 'backend-uat'
     static_configs:
-      - targets: ['localhost:4040']
+      - targets: ['aaikyam_server_uat_aaikyam-server-uat:4040']
 
-  # Additional monitoring configurations
-  # Add more specific job configurations as needed
+  - job_name: 'strapi'
+    static_configs:
+      - targets: ['aaikyam_strapi_strapi:1337']
+
+  - job_name: 'frontend-beta'
+    static_configs:
+      - targets: ['aikyam-frontend-beta_aaikyam-frontend-beta:3005']
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx_server_nginx:80']
