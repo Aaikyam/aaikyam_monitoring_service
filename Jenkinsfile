@@ -11,7 +11,7 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM',
                           branches: [[name: "*/${BRANCH_NAME}"]],
-                          userRemoteConfigs: [[url: 'https://github.com/Aaikyam/aaikyam-monitoring-service.git', credentialsId: 'aaikyam-labs']]
+                          userRemoteConfigs: [[url: 'https://github.com/Aaikyam/aaikyam_monitoring_service.git', credentialsId: 'aaikyam-labs']]
                 ])
             }
         }
