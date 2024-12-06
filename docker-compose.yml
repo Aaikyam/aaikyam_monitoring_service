@@ -18,7 +18,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_PASSWORD: 'aaikyam032524'
     ports:
-      - "3045:3045"
+      - "3009:3009"
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
