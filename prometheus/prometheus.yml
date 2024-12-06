@@ -28,10 +28,6 @@ scrape_configs:
     static_configs:
       - targets: ['aaikyam_admin_admin-portal:3001']
 
-  - job_name: 'recommendation-scheduler'
-    static_configs:
-      - targets: ['aaikyam_ai_scheduler_recommendation_scheduler:<REPLACE_WITH_PORT>']
-
   - job_name: 'elasticsearch'
     static_configs:
       - targets: ['aaikyam_elk_elasticsearch:9200']
