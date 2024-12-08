@@ -13,11 +13,21 @@ scrape_configs:
     static_configs:
       - targets: ['aaikyam_node_exporter:9100']
 
-  # Monitor Docker Swarm services
   - job_name: 'docker_services'
     dockerswarm_sd_configs:
       - host: unix:///var/run/docker.sock
         role: services
+    relabel_configs:
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_scrape]
+        regex: "true"
+        action: keep
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_path]
+        regex: (.+)
+        target_label: __metrics_path__
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_port]
+        regex: (.+)
+        target_label: __address__
+        replacement: $1
 
   # Services monitoring
   - job_name: 'aaikyam-frontend-dev'
@@ -25,4 +35,8 @@ scrape_configs:
     static_configs:
       - targets: ['aaikyam-frontend-dev:3003']
 
+  - job_name: 'nginx'
+    metrics_path: '/nginx_status'
+    static_configs:
+      - targets: ['195.35.7.212:80']
   
