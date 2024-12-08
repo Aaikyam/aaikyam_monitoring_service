@@ -36,7 +36,7 @@ scrape_configs:
       - targets: ['aaikyam-frontend-dev:3003']
 
   - job_name: 'nginx'
-    metrics_path: '/nginx_status'
+    metrics_path: '/metrics'
     static_configs:
-      - targets: ['195.35.7.212:80']
+      - targets: ['195.35.7.212:9113']
   
