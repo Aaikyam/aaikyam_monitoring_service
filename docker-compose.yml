@@ -1,39 +1,60 @@
-version: '3.8'
+version: "3.9"
 
 services:
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     ports:
       - "9090:9090"
+    networks:
+      - aaikyam_network
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
-    networks:
-      - aaikyam_network
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.labels.machine == prod
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - aaikyam_network
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=aaikyam032524
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
-    ports:
-      - "3000:3000"  # Changed to standard Grafana port
     volumes:
       - grafana_data:/var/lib/grafana
-    networks:
-      - aaikyam_network
-    user: root  # Add this to resolve potential permission issues
-    depends_on:
-      - prometheus
-    restart: unless-stopped  # Add restart policy
+    user: root  # Resolve permission issues
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.labels.machine == prod
 
 networks:
   aaikyam_network:
-    external: true  
-    
+    external: true
+
 volumes:
   prometheus_data:
   grafana_data:
